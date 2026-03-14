@@ -1,2 +1,5 @@
 [phases.setup]
 nixPkgs = ["nodejs_22"]
+
+[start]
+cmd = "npx serve dist -s -l 80"

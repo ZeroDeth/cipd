@@ -31,7 +31,7 @@ export default function App() {
       case 'home':
         return <Home stats={stats} setView={setView} />;
       case 'study':
-        return <Study stats={stats} setStats={setStats} />;
+        return <Study stats={stats} setStats={setStats} setView={setView} />;
       case 'quiz':
         return <Quiz stats={stats} setStats={setStats} />;
       case 'scenarios':

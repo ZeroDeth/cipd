@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { MODULES, STUDY } from '../data';
 import ModuleSelector from '../components/ModuleSelector';
 
-export default function Study({ stats, setStats }) {
+export default function Study({ stats, setStats, setView }) {
   const [selectedModule, setSelectedModule] = useState(null);
   const [expandedIndex, setExpandedIndex] = useState(null);
 
@@ -117,7 +117,7 @@ export default function Study({ stats, setStats }) {
 
       <button
         className="btn-primary"
-        onClick={() => window.location.hash = '#quiz'}
+        onClick={() => setView('quiz')}
         style={{ width: '100%', justifyContent: 'center' }}
       >
         Ready to Test Your Knowledge? → Quiz

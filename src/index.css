@@ -1365,17 +1365,151 @@ body {
   opacity: 0.6;
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive - iPhone 16 Pro (393px) and similar */
 @media (max-width: 430px) {
   .header h1 {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .header p {
+    font-size: 13px;
+  }
+
+  .nav {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .nav-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .feed {
+    padding: 12px;
+  }
+
+  .block {
+    padding: 16px;
+    border-radius: 12px;
   }
 
   .module-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .module-card {
+    padding: 12px;
+  }
+
+  .module-card-icon {
+    font-size: 24px;
   }
 
   .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-box {
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .board-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .board-tile-emoji {
+    font-size: 20px;
+  }
+
+  .dice-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 22px;
+  }
+
+  .achievement-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .achievement-card {
+    padding: 12px;
+  }
+
+  .quiz-option {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .study-toggle {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .study-body {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .btn-primary {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .welcome-block {
+    padding: 20px 16px;
+  }
+
+  .welcome-block h2 {
+    font-size: 18px;
+  }
+
+  .result-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .result-label {
+    font-size: 28px;
+  }
+
+  .scenario-context {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .decision-btn {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .warroom-brief {
+    padding: 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 375px) {
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .nav-item {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .module-grid {
     grid-template-columns: 1fr;
   }
 

@@ -38,17 +38,31 @@ export default function Flashcards({ stats, setStats }) {
   };
 
   const handleMastered = () => {
-    const updated = new Set(mastered);
-    updated.add(currentIndex);
-    setMastered(updated);
-    advanceCard(updated, reviewAgain);
+    const updatedMastered = new Set(mastered);
+    updatedMastered.add(currentIndex);
+    setMastered(updatedMastered);
+
+    // Remove from reviewAgain if previously classified there
+    const updatedReview = new Set(reviewAgain);
+    if (updatedReview.delete(currentIndex)) {
+      setReviewAgain(updatedReview);
+    }
+
+    advanceCard(updatedMastered, updatedReview);
   };
 
   const handleReviewAgain = () => {
-    const updated = new Set(reviewAgain);
-    updated.add(currentIndex);
-    setReviewAgain(updated);
-    advanceCard(mastered, updated);
+    const updatedReview = new Set(reviewAgain);
+    updatedReview.add(currentIndex);
+    setReviewAgain(updatedReview);
+
+    // Remove from mastered if previously classified there
+    const updatedMastered = new Set(mastered);
+    if (updatedMastered.delete(currentIndex)) {
+      setMastered(updatedMastered);
+    }
+
+    advanceCard(updatedMastered, updatedReview);
   };
 
   const advanceCard = (currentMastered, currentReview) => {

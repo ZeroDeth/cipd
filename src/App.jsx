@@ -8,6 +8,7 @@ import Scenarios from './pages/Scenarios';
 import Crisis from './pages/Crisis';
 import Board from './pages/Board';
 import WarRoom from './pages/WarRoom';
+import Flashcards from './pages/Flashcards';
 import Achievements from './pages/Achievements';
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
     currentStreak: 0,
     boardGames: 0,
     quizScore: 0,
+    flashcardsStudied: 0,
     modulesCompleted: new Set(),
     studyViewed: new Set()
   });
@@ -31,7 +33,9 @@ export default function App() {
       case 'home':
         return <Home stats={stats} setView={setView} />;
       case 'study':
-        return <Study stats={stats} setStats={setStats} />;
+        return <Study stats={stats} setStats={setStats} setView={setView} />;
+      case 'flashcards':
+        return <Flashcards stats={stats} setStats={setStats} />;
       case 'quiz':
         return <Quiz stats={stats} setStats={setStats} />;
       case 'scenarios':

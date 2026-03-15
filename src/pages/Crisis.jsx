@@ -9,6 +9,7 @@ export default function Crisis({ stats, setStats }) {
   const [timeLeft, setTimeLeft] = useState(20);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [crisisScore, setCrisisScore] = useState(0);
+  const [selectedOptionIdx, setSelectedOptionIdx] = useState(null);
   const [finalReport, setFinalReport] = useState(null);
 
   const filteredCrises = CRISES.filter(c => !selectedModule || c.module === selectedModule);
@@ -22,15 +23,26 @@ export default function Crisis({ stats, setStats }) {
       return () => clearTimeout(timer);
     }
     if (timeLeft === 0 && !hasAnswered && stage) {
-      // Auto-pick worst option
-      handleOption(stage.options[stage.options.length - 1]);
+      // Auto-pick worst option (last in list)
+      const lastIdx = stage.options.length - 1;
+      handleOption(stage.options[lastIdx], lastIdx);
     }
   }, [timeLeft, hasAnswered, stage]);
 
-  const handleOption = (option) => {
+  const handleOption = (option, idx) => {
     const points = option.impact === 'positive' ? 20 : option.impact === 'neutral' ? 10 : 0;
-    setCrisisScore(crisisScore + points);
+    setCrisisScore(prev => prev + points);
+    setSelectedOptionIdx(idx);
     setHasAnswered(true);
+  };
+
+  const resetCrisis = () => {
+    setStageIndex(0);
+    setTimeLeft(20);
+    setHasAnswered(false);
+    setCrisisScore(0);
+    setSelectedOptionIdx(null);
+    setFinalReport(null);
   };
 
   const nextStage = () => {
@@ -38,6 +50,7 @@ export default function Crisis({ stats, setStats }) {
       setStageIndex(stageIndex + 1);
       setTimeLeft(20);
       setHasAnswered(false);
+      setSelectedOptionIdx(null);
     } else {
       setFinalReport({
         title: crisis.title,
@@ -67,11 +80,7 @@ export default function Crisis({ stats, setStats }) {
                 onClick={() => {
                   setSelectedModule(code);
                   setSelectedCrisis(null);
-                  setStageIndex(0);
-                  setTimeLeft(20);
-                  setHasAnswered(false);
-                  setCrisisScore(0);
-                  setFinalReport(null);
+                  resetCrisis();
                 }}
               >
                 Study Module {code}
@@ -98,11 +107,7 @@ export default function Crisis({ stats, setStats }) {
                 className="decision-btn"
                 onClick={() => {
                   setSelectedCrisis(c.id);
-                  setStageIndex(0);
-                  setTimeLeft(20);
-                  setHasAnswered(false);
-                  setCrisisScore(0);
-                  setFinalReport(null);
+                  resetCrisis();
                 }}
               >
                 <div style={{ fontWeight: '600' }}>{c.icon} {c.title}</div>
@@ -149,13 +154,6 @@ export default function Crisis({ stats, setStats }) {
     );
   }
 
-  const selectedOption = hasAnswered
-    ? stage.options.find((opt, idx) => {
-        // Find which option was selected based on the last call
-        return true;
-      })
-    : null;
-
   return (
     <div className="feed">
       <div className="block">
@@ -192,7 +190,7 @@ export default function Crisis({ stats, setStats }) {
               <button
                 key={idx}
                 className="decision-btn"
-                onClick={() => handleOption(option)}
+                onClick={() => handleOption(option, idx)}
               >
                 {option.text}
               </button>
@@ -205,10 +203,17 @@ export default function Crisis({ stats, setStats }) {
                 key={idx}
                 className={`outcome-box ${option.impact}`}
                 style={{
-                  opacity: option.impact === 'positive' ? 1 : 0.7,
-                  marginBottom: '12px'
+                  opacity: idx === selectedOptionIdx ? 1 : 0.6,
+                  marginBottom: '12px',
+                  border: idx === selectedOptionIdx ? '2px solid var(--primary)' : 'none',
+                  position: 'relative'
                 }}
               >
+                {idx === selectedOptionIdx && (
+                  <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--primary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    👆 Your Choice
+                  </div>
+                )}
                 <div style={{ fontSize: '13px', fontWeight: '600' }}>
                   {option.impact === 'positive'
                     ? '✓ Best Response'

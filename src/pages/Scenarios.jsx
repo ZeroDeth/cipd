@@ -41,22 +41,23 @@ function getScenarios(moduleCode) {
 export default function Scenarios({ stats, setStats }) {
   const [selectedModule, setSelectedModule] = useState(null);
   const [currentScenario, setCurrentScenario] = useState(0);
-  const [scenarioScore, setScenarioScore] = useState(0);
-  const [scenariosCompleted, setScenariosCompleted] = useState([]);
+  const [currentPoints, setCurrentPoints] = useState(0);
+  const [scenarioScores, setScenarioScores] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [resultData, setResultData] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
 
   const startScenarios = (moduleCode) => {
     setSelectedModule(moduleCode);
     setCurrentScenario(0);
-    setScenarioScore(0);
-    setScenariosCompleted([]);
+    setCurrentPoints(0);
+    setScenarioScores([]);
     setShowResult(false);
+    setIsComplete(false);
   };
 
   const handleDecision = (option) => {
-    const newScore = scenarioScore + option.points;
-    setScenarioScore(newScore);
+    setCurrentPoints(option.points);
 
     setResultData({
       choice: option.text,
@@ -75,21 +76,22 @@ export default function Scenarios({ stats, setStats }) {
 
   const continueToNext = () => {
     const scenarios = getScenarios(selectedModule);
+    const updatedScores = [...scenarioScores, currentPoints];
+    setScenarioScores(updatedScores);
+
     if (currentScenario < scenarios.length - 1) {
       setCurrentScenario(currentScenario + 1);
+      setCurrentPoints(0);
       setShowResult(false);
-      setScenariosCompleted([...scenariosCompleted, scenarioScore]);
     } else {
-      finishScenarios();
+      // All scenarios done — show completion screen
+      setStats(prev => ({
+        ...prev,
+        totalScenarios: prev.totalScenarios + 1
+      }));
+      setShowResult(false);
+      setIsComplete(true);
     }
-  };
-
-  const finishScenarios = () => {
-    setStats(prev => ({
-      ...prev,
-      totalScenarios: prev.totalScenarios + 1
-    }));
-    setShowResult(false);
   };
 
   if (!selectedModule) {
@@ -109,9 +111,9 @@ export default function Scenarios({ stats, setStats }) {
   const scenarios = getScenarios(selectedModule);
   const scenario = scenarios[currentScenario];
 
-  if (!showResult && scenariosCompleted.length === scenarios.length) {
-    const totalScore = scenariosCompleted.reduce((a, b) => a + b, 0);
-    const avgScore = Math.round(totalScore / scenarios.length);
+  if (isComplete) {
+    const totalScore = scenarioScores.reduce((a, b) => a + b, 0);
+    const avgScore = scenarios.length > 0 ? Math.round(totalScore / scenarios.length) : 0;
 
     return (
       <div className="feed">
@@ -147,9 +149,9 @@ export default function Scenarios({ stats, setStats }) {
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <div style={{ fontSize: '10px', color: 'var(--muted)' }}>CURRENT SCORE</div>
+          <div style={{ fontSize: '10px', color: 'var(--muted)' }}>TOTAL SCORE</div>
           <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--primary)' }}>
-            {scenarioScore} pts
+            {scenarioScores.reduce((a, b) => a + b, 0) + currentPoints} pts
           </div>
         </div>
 

@@ -113,7 +113,7 @@ export default function Scenarios({ stats, setStats }) {
 
   if (isComplete) {
     const totalScore = scenarioScores.reduce((a, b) => a + b, 0);
-    const avgScore = Math.round(totalScore / scenarios.length);
+    const avgScore = scenarios.length > 0 ? Math.round(totalScore / scenarios.length) : 0;
 
     return (
       <div className="feed">
@@ -151,7 +151,7 @@ export default function Scenarios({ stats, setStats }) {
         <div style={{ marginBottom: '16px' }}>
           <div style={{ fontSize: '10px', color: 'var(--muted)' }}>TOTAL SCORE</div>
           <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--primary)' }}>
-            {scenarioScores.reduce((a, b) => a + b, 0)} pts
+            {scenarioScores.reduce((a, b) => a + b, 0) + currentPoints} pts
           </div>
         </div>
 

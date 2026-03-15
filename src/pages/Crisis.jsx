@@ -23,16 +23,26 @@ export default function Crisis({ stats, setStats }) {
       return () => clearTimeout(timer);
     }
     if (timeLeft === 0 && !hasAnswered && stage) {
-      // Auto-pick worst option
-      handleOption(stage.options[stage.options.length - 1]);
+      // Auto-pick worst option (last in list)
+      const lastIdx = stage.options.length - 1;
+      handleOption(stage.options[lastIdx], lastIdx);
     }
   }, [timeLeft, hasAnswered, stage]);
 
   const handleOption = (option, idx) => {
     const points = option.impact === 'positive' ? 20 : option.impact === 'neutral' ? 10 : 0;
-    setCrisisScore(crisisScore + points);
+    setCrisisScore(prev => prev + points);
     setSelectedOptionIdx(idx);
     setHasAnswered(true);
+  };
+
+  const resetCrisis = () => {
+    setStageIndex(0);
+    setTimeLeft(20);
+    setHasAnswered(false);
+    setCrisisScore(0);
+    setSelectedOptionIdx(null);
+    setFinalReport(null);
   };
 
   const nextStage = () => {
@@ -70,12 +80,7 @@ export default function Crisis({ stats, setStats }) {
                 onClick={() => {
                   setSelectedModule(code);
                   setSelectedCrisis(null);
-                  setStageIndex(0);
-                  setTimeLeft(20);
-                  setHasAnswered(false);
-                  setCrisisScore(0);
-                  setSelectedOptionIdx(null);
-                  setFinalReport(null);
+                  resetCrisis();
                 }}
               >
                 Study Module {code}
@@ -102,12 +107,7 @@ export default function Crisis({ stats, setStats }) {
                 className="decision-btn"
                 onClick={() => {
                   setSelectedCrisis(c.id);
-                  setStageIndex(0);
-                  setTimeLeft(20);
-                  setHasAnswered(false);
-                  setCrisisScore(0);
-                  setSelectedOptionIdx(null);
-                  setFinalReport(null);
+                  resetCrisis();
                 }}
               >
                 <div style={{ fontWeight: '600' }}>{c.icon} {c.title}</div>
